@@ -104,6 +104,11 @@ def module_eda():
             sns.barplot(x=missing_df.index, y=missing_df['Porcentaje (%)'], ax=ax, palette="viridis")
             plt.xticks(rotation=45, ha='right')
             st.pyplot(fig)
+            
+        st.info("""
+        **Justificación de Tratamiento:** 
+        Las ausencias se concentran en ratios de liquidez y datos por acción. No se aplicará imputación automática (ni por media, ni por mediana, ni por ceros), ya que alterar estos ratios distorsionaría artificialmente el perfil de riesgo y la estructura de capital particular de cada empresa.
+        """)
 
     # --- Ítem 5: Distribuciones ---
     with tabs[2]:
