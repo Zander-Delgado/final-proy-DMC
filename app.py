@@ -152,7 +152,8 @@ def module_eda():
     with tabs[6]:
         st.subheader("Ítem 9: Filtros y Análisis Dinámico")
         tickers_disp = df['Ticker Symbol'].unique()
-        selected_tickers = st.multiselect("Selecciona Empresas (Ticker Symbol):", tickers_disp, default=['AAPL', 'MSFT', 'GOOGL'])
+        default_tickers = list(tickers_disp)[:3] # Extrae de forma segura los 3 primeros tickers que sí existen
+        selected_tickers = st.multiselect("Selecciona Empresas (Ticker Symbol):", tickers_disp, default=default_tickers)
         
         if selected_tickers:
             min_rev = float(df['Total Revenue'].min())
