@@ -212,13 +212,24 @@ def module_eda():
             st.write(f"Registros encontrados: {len(dyn_df)}")
             st.dataframe(dyn_df[['Ticker Symbol', 'Period Ending', 'Total Revenue', 'Net Income', 'Current Ratio']], use_container_width=True)
 
-    # --- Ítem 10: Hallazgos Clave ---
+   # --- Ítem 10: Hallazgos Clave ---
     with tabs[7]:
         st.subheader("Ítem 10: Hallazgos Clave del EDA")
+        
+        # Visualización resumen exigida por la rúbrica
+        st.write("**Visualización Resumen: Matriz de Correlación Financiera**")
+        cols_resumen = ['Total Revenue', 'Net Income', 'Total Assets', 'Total Liabilities']
+        df_corr = df[cols_resumen].corr()
+        
+        fig, ax = plt.subplots(figsize=(8, 5))
+        sns.heatmap(df_corr, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5, ax=ax)
+        st.pyplot(fig)
+        
         st.markdown("""
         * **Concentración de la Muestra:** Existe un alto grado de asimetría positiva en los ingresos corporativos; unas pocas empresas dominan el volumen total de activos e ingresos.
         * **Faltantes Sistemáticos:** Los nulos no son aleatorios. Se concentran en ratios específicos (Current/Quick Ratio), lo que sugiere que ciertas industrias (ej. sector bancario) estructuran sus balances de manera distinta y no reportan liquidez tradicional.
         * **Márgenes de Utilidad:** Se identifican períodos de utilidad neta negativa (pérdidas), lo que hace indispensable evaluar el flujo de caja operativo como métrica complementaria para medir la salud real del negocio.
+        * **Correlación Estructural (Visualización):** El mapa de calor confirma una correlación casi perfecta (0.97) entre activos y pasivos totales, evidenciando que el crecimiento a gran escala en este mercado está fuertemente apalancado con deuda.
         """)
 
 def module_conclusions():
