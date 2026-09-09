@@ -125,15 +125,34 @@ def module_eda():
         La distribución de **{var_to_plot}** presenta una fuerte asimetría positiva. La mayor concentración de empresas se agrupa en los rangos inferiores, mientras que una larga cola hacia la derecha evidencia la presencia de valores extremos (outliers naturales), representando a las corporaciones de mayor capitalización que dominan la muestra.
         """)
 
-    # --- Ítem 6: Análisis de Variables Categóricas ---
+   # --- Ítem 6: Análisis de Variables Categóricas ---
     with tabs[3]:
         st.subheader("Ítem 6: Análisis de variables categóricas")
-        st.write("Conteo de reportes financieros emitidos por año fiscal (`For Year`).")
-        year_counts = df['For Year'].value_counts().sort_index()
-        fig, ax = plt.subplots(figsize=(10, 4))
-        sns.barplot(x=year_counts.index.astype(str), y=year_counts.values, palette="magma", ax=ax)
-        plt.xticks(rotation=45)
-        st.pyplot(fig)
+        st.write("Conteo y proporción de reportes financieros emitidos por año fiscal (`For Year`).")
+        
+        # Filtramos el valor atípico evidente (1215.0) detectado en la exploración inicial
+        df_years = df[df['For Year'] > 2000].copy()
+        
+        year_counts = df_years['For Year'].value_counts().sort_index()
+        year_props = (year_counts / year_counts.sum() * 100).round(1)
+        
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            fig, ax = plt.subplots(figsize=(10, 4))
+            sns.barplot(x=year_counts.index.astype(str), y=year_counts.values, palette="magma", ax=ax)
+            plt.xticks(rotation=45)
+            plt.ylabel("Cantidad de Reportes")
+            st.pyplot(fig)
+            
+        with col2:
+            st.write("**Proporción por Año:**")
+            prop_df = pd.DataFrame({'Reportes': year_counts, 'Proporción (%)': year_props})
+            st.dataframe(prop_df, use_container_width=True)
+            
+        st.info("""
+        **Insight de Calidad de Datos:** 
+        Durante la exploración se detectó y filtró un registro atípico correspondiente al año "1215.0" (un evidente error de digitación en la fuente original). Tras la limpieza, observamos que el volumen de reportes financieros se concentra mayoritariamente en el trienio 2013-2015.
+        """)
 
     # --- Ítem 7: Análisis Bivariado (Numérico vs Categórico) ---
     with tabs[4]:
