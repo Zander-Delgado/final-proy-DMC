@@ -168,13 +168,29 @@ def module_eda():
     with tabs[5]:
         st.subheader("Ítem 8: Análisis Bivariado (Categórico vs Categórico)")
         st.write("Clasificación de Riesgo de Liquidez por Año Fiscal.")
-        df_liq = df.dropna(subset=['Current Ratio', 'For Year']).copy()
-        # Creación de categoría de liquidez
-        df_liq['Riesgo Liquidez'] = np.where(df_liq['Current Ratio'] < 1.0, 'Alto (Ratio < 1)', 'Saludable (Ratio >= 1)')
+        
+        # 1. Filtramos el año atípico 1215.0
+        df_liq = df[df['For Year'] > 2000].dropna(subset=['Current Ratio', 'For Year']).copy()
+        
+        # 2. Ajustamos el umbral a 100 respetando la escala original del dataset
+        df_liq['Riesgo Liquidez'] = np.where(df_liq['Current Ratio'] < 100, 
+                                             'Alto Riesgo (< 1.0)', 
+                                             'Saludable (>= 1.0)')
+        
         ct = pd.crosstab(df_liq['For Year'], df_liq['Riesgo Liquidez'], normalize='index') * 100
+        
         fig, ax = plt.subplots(figsize=(10, 5))
+        # Asignamos rojo/rosado al riesgo alto y azul al riesgo saludable
         ct.plot(kind='bar', stacked=True, color=['#ff9999', '#66b3ff'], ax=ax)
+        
         plt.ylabel("Proporción (%)")
+        plt.xlabel("Año Fiscal")
+        plt.xticks(rotation=45)
+        
+        # Extraemos la leyenda del recuadro principal para evitar superposiciones
+        plt.legend(title="Estado de Liquidez", bbox_to_anchor=(1.05, 1), loc='upper left')
+        plt.tight_layout()
+        
         st.pyplot(fig)
 
     # --- Ítem 9: Análisis Dinámico con Parámetros ---
