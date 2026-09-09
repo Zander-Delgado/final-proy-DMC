@@ -110,7 +110,7 @@ def module_eda():
         Las ausencias se concentran en ratios de liquidez y datos por acción. No se aplicará imputación automática (ni por media, ni por mediana, ni por ceros), ya que alterar estos ratios distorsionaría artificialmente el perfil de riesgo y la estructura de capital particular de cada empresa.
         """)
 
-    # --- Ítem 5: Distribuciones ---
+   # --- Ítem 5: Distribuciones ---
     with tabs[2]:
         st.subheader("Ítem 5: Distribución de métricas financieras")
         var_to_plot = st.selectbox("Selecciona la métrica (Escala: Miles de Millones USD):", 
@@ -119,6 +119,11 @@ def module_eda():
         fig, ax = plt.subplots(figsize=(10, 4))
         sns.histplot(scaled_data, bins=50, kde=True, color='royalblue', ax=ax)
         st.pyplot(fig)
+        
+        st.markdown(f"""
+        **Interpretación Visual:**
+        La distribución de **{var_to_plot}** presenta una fuerte asimetría positiva. La mayor concentración de empresas se agrupa en los rangos inferiores, mientras que una larga cola hacia la derecha evidencia la presencia de valores extremos (outliers naturales), representando a las corporaciones de mayor capitalización que dominan la muestra.
+        """)
 
     # --- Ítem 6: Análisis de Variables Categóricas ---
     with tabs[3]:
